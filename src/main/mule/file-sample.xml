@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/sftp http://www.mulesoft.org/schema/mule/sftp/current/mule-sftp.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+	<file:config name="File_Config" doc:name="File Config" doc:id="a50e6fd3-a2de-44ab-8496-37276c884cd1" />
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="02766b13-bdb2-4053-a63c-341642732c91" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<file:config name="File_Config1" doc:name="File Config" doc:id="29d7a411-b1e1-4577-8d36-f94fff50f785" />
+	<flow name="file-sampleFlow" doc:id="24c42e2f-bae4-4136-b43c-f130fe0adbcd" >
+		<http:listener doc:name="Listener" doc:id="3dcd8dc4-681e-465a-b33a-4147eb63cced" config-ref="HTTP_Listener_config" path="/file"/>
+		<file:read doc:name="Read" doc:id="cbcd0590-cadb-4a34-b7f3-a9a841663d1a" config-ref="File_Config" path="C:\Users\DELL\Desktop\INPUT\New Text Document.txt"/>
+		<logger level="INFO" doc:name="Logger" doc:id="09e705a4-700f-4ac3-842b-c1ef43238e50" message='#["read succesfully": payload]'/>
+		<file:write doc:name="Write" doc:id="00bfefab-a09b-4965-8528-c2fcc8f9f49f" config-ref="File_Config1" path="C:\Users\DELL\Desktop\INPUT\New Text Document.txt"/>
+		<logger level="INFO" doc:name="Logger" doc:id="100c6456-4e87-4748-adda-fa635527691e" message='#["write successfully" : payload]'/>
+	</flow>
+	<flow name="file-sampleFlow2" doc:id="8260374c-1130-49a9-b0a4-53c582fa131e" >
+		<try doc:name="Try" doc:id="28ad76a9-a22d-4196-bbc6-7ef9adbbcdad" />
+	</flow>
+	<flow name="file-sampleFlow1" doc:id="2ea299b9-73a7-4dab-ad95-abd5dfb1b34b" >
+		<file:listener doc:name="On New or Updated File" doc:id="b0e47586-ee7c-43fb-9968-44a2cf97bbed" moveToDirectory="C:\Users\DELL\Desktop\OUTPUT" directory="C:\Users\DELL\Desktop\INPUT">
+			<scheduling-strategy >
+				<fixed-frequency />
+			</scheduling-strategy>
+		</file:listener>
+		<logger level="INFO" doc:name="Logger" doc:id="7fd1fd08-51ae-4213-b4cf-32a11f171237" message="read the file"/>
+		<file:read doc:name="Read" doc:id="52764aa6-ffa4-4be5-8335-af59043e6361" path="C:\Users\DELL\Desktop\OUTPUT\language.csv"/>
+	</flow>
+</mule>
